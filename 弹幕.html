@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .outer {
+            width: 856px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .outer span {
+            position: absolute;
+            left: 856px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer" id="container">
+        <video controls src="./01.mp4"></video>
+    </div>
+
+    <div>
+        <input type="text" id="ipt" value="Eason真帅">
+        <button id="btn">发布我的想法</button>
+    </div>
+</body>
+<script>
+    function Barrage(container, content) {
+        //获取容器
+        this.container = document.getElementById("container");
+        //获取内容
+        this.content = content;
+        //获取样式随机数
+        this.size = this.random(12, 50);
+        this.y = this.random(0, 430);
+        this.time = this.random(1, 6);
+        this.rgb = this.randomColor();
+
+        this.init()
+    }
+    Barrage.prototype.random = function (a, b) {
+        return Math.floor(Math.random() * (b - a) + a);
+    }
+    Barrage.prototype.randomColor = function(){
+        var r = this.random(0,256);
+        var g = this.random(0,256);
+        var b = this.random(0,256);
+        var rgb = "rgb("+r+","+g+","+b+")";
+        return rgb
+    }
+    Barrage.prototype.init = function(){
+        
+        this.oSpan = document.createElement("span");
+        this.oSpan.style.size = this.size + 'px';
+        this.oSpan.style.top = this.y + 'px';
+        this.oSpan.style.color = this.rgb;
+        this.oSpan.innerHTML = this.content;
+        this.oSpan.style.transition = "all "+this.time+"s linear";
+        //把节点加入容器中
+        this.container.appendChild(this.oSpan);
+        console.log(this.oSpan);
+        //起开始你的表演
+        this.move();
+    }
+    Barrage.prototype.move = function(){
+        var _this = this;
+        setTimeout(function(){
+            _this.oSpan.style.left = '-80px';
+        });
+        this.oSpan.addEventListener("transitionend",function(){
+            this.remove();
+        })
+        Barrage.prototype.remove = function(){
+            this.oSpan.remove();
+        }
+    }
+
+
+
+    var btn = document.getElementById("btn");
+    var ipt = document.getElementById("ipt");
+    btn.onclick = function () {
+        new Barrage(container, ipt.value);
+    }
+
+</script>
+
+</html>
