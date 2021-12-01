@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //在函数的原型上添加方法
+        Function.prototype.myCall = function(content,...rest){
+            //判断this是否指向对象
+            content = content??window;
+            content = (typeof content !== 'object')&&(typeof content !== 'functioon')?Object(content):content;
+
+            //设置无法重复的属性名
+            const ky = Symbol('ky');
+            //给content添加fn函数
+            content[ky] = this;
+            //改变this指向
+            const re = content[ky](...rest);
+            //删除fn函数所在的属性
+            delete content[ky];
+            //返回fn函数的返回值
+            return re;
+
+        }
+
+        function fn(a,b){
+            console.log(this);
+            console.log(a + b);
+            return '手写call';
+        }
+
+        fn.myCall({name:'chenhan'},5,6)
+    </script>
+</body>
+</html>
